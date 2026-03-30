@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bege">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- EXERCÍCIO 1 - COLUNA -->
+
+        <TextView
+            android:id="@+id/titulo1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Alongamento de Coluna"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/img1"
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/exercicio_coluna"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/titulo1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/freq1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frequência: 3x por semana"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/img1"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/rep1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Repetições: 10 vezes"
+            app:layout_constraintTop_toBottomOf="@id/freq1"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
+        <!-- EXERCÍCIO 2 - CERVICAL -->
+
+        <TextView
+            android:id="@+id/titulo2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Postura Cervical"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/rep1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/img2"
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/exercicio_cervical"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/titulo2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/freq2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frequência: 4x por semana"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/img2"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/rep2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Repetições: 12 vezes"
+            app:layout_constraintTop_toBottomOf="@id/freq2"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
+        <!-- EXERCÍCIO 3 - LOMBAR -->
+
+        <TextView
+            android:id="@+id/titulo3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Alongamento Lombar"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/rep2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/img3"
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/exercicio_lombar"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/titulo3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/freq3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frequência: 3x por semana"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/img3"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/rep3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Repetições: 15 vezes"
+            app:layout_constraintTop_toBottomOf="@id/freq3"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
