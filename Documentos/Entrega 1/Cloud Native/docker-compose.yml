@@ -1,0 +1,205 @@
+version: "3.9"
+
+# =============================================================================
+# docker-compose.yml — Backend Cloud Native
+# API REST + PostgreSQL + Redis + Nginx (reverse proxy)
+# =============================================================================
+
+networks:
+  backend-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  app-logs:
+    driver: local
+
+# ---------------------------------------------------------------------------
+# Variáveis de ambiente compartilhadas (override via .env)
+# ---------------------------------------------------------------------------
+x-db-env: &db-env
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: ${DB_NAME:-appdb}
+  POSTGRES_USER: ${DB_USER:-appuser}
+  POSTGRES_PASSWORD: ${DB_PASS:-secret}
+
+x-java-opts: &java-opts
+  JAVA_OPTS: "-Xms256m -Xmx1g -XX:+UseG1GC -XX:+HeapDumpOnOutOfMemoryError"
+  SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE:-development}
+
+# ---------------------------------------------------------------------------
+services:
+
+  # ── API REST (Spring Boot) ────────────────────────────────────────────────
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+      args:
+        JAVA_VERSION: "17"
+        APP_PORT: "8080"
+    image: backend-api:${APP_VERSION:-latest}
+    container_name: backend-api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8080}:8080"
+    environment:
+      <<: [*db-env, *java-opts]
+      SERVER_PORT: "8080"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-appdb}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER:-appuser}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS:-secret}
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: "6379"
+      APP_LOG_DIR: /app/logs
+    volumes:
+      - app-logs:/app/logs
+      - ./config:/app/config:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    labels:
+      com.app.service: "api"
+      com.app.version: "${APP_VERSION:-dev}"
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: "1.0"
+        reservations:
+          memory: 512M
+
+  # ── Worker (processamento assíncrono) ─────────────────────────────────────
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    image: backend-worker:${APP_VERSION:-latest}
+    container_name: backend-worker
+    restart: unless-stopped
+    environment:
+      <<: [*db-env, *java-opts]
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-appdb}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER:-appuser}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS:-secret}
+      SPRING_REDIS_HOST: redis
+    volumes:
+      - app-logs:/app/logs
+    depends_on:
+      - api
+    networks:
+      - backend-net
+    profiles:
+      - full   # Ativo apenas com: docker compose --profile full up
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.5"
+
+  # ── PostgreSQL ─────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: backend-postgres
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_EXPOSE_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME:-appdb}
+      POSTGRES_USER: ${DB_USER:-appuser}
+      POSTGRES_PASSWORD: ${DB_PASS:-secret}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro  # Scripts SQL de init
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-appuser} -d ${DB_NAME:-appdb}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.5"
+
+  # ── Redis (cache e filas) ─────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: backend-redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --save 60 1
+    ports:
+      - "${REDIS_EXPOSE_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+
+  # ── Nginx (reverse proxy) ─────────────────────────────────────────────────
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: backend-nginx
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - app-logs:/var/log/nginx
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - backend-net
+    profiles:
+      - full
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+
+  # ── Adminer (gestão visual do banco) ─────────────────────────────────────
+  adminer:
+    image: adminer:4
+    container_name: backend-adminer
+    restart: unless-stopped
+    ports:
+      - "${ADMINER_PORT:-8888}:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    depends_on:
+      - postgres
+    networks:
+      - backend-net
+    profiles:
+      - dev   # Apenas em desenvolvimento
