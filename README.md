@@ -17,7 +17,7 @@
 ## 📝 Descrição
 
 <p align="center">
-<img src="Imagens/banner.png" alt="DevMasters" width="1000">
+<img src="imagens/banner.png" alt="DevMasters" width="1000">
 </p>
 
 Site responsivo para o **Instituto Alma** com foco em transparência e captação: páginas públicas (Início, Sobre, **Projetos** com detalhe, Como Ajudar, Contato), **Portal Alma** (login de doador/admin) e **painel administrativo** (CRUD de projetos com **upload de imagens**).  
