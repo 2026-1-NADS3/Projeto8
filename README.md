@@ -8,24 +8,24 @@
 
 ## DevMasters
 
-## Integrantes: <a href="https://www.linkedin.com/in/victorbarq/">Goku Sayajin</a>, <a href="https://www.linkedin.com/in/victorbarq/">Saitama One</a>, <a href="https://www.linkedin.com/in/victorbarq/">Ikki de Fenix</a>, <a href="https://www.linkedin.com/in/victorbarq/">Yusuke Urameshi</a>, <a href="https://www.linkedin.com/in/victorbarq/">Roronoa Zoro</a>
+## Integrantes: <a href="http://www.linkedin.com/in/matheusfernandes2005">Matheus Fernandes Moraes</a>, <a href="https://www.linkedin.com/in/henri-seixas">Henri Seixas Souza</a>, <a href="#">Ana Luiza Ribeiro do Vale</a>, <a href="https://www.linkedin.com/in/pedro-henrique-ara%C3%BAjo-del-picolo-aa9444276">Pedro Henrique Araújo Del Picolo</a>
 
-## Professores Orientadores: <a href="https://www.linkedin.com/in/victorbarq/">Dr. Victor Von Doom</a>, <a href="https://www.linkedin.com/in/victorbarq/">Me. Saitama</a>, <a href="https://www.linkedin.com/in/victorbarq/">Dr. Strange</a>, <a href="https://www.linkedin.com/in/victorbarq/">Me. Yoda</a>, <a href="https://www.linkedin.com/in/victorbarq/">Dr. Gero</a>
+## Professores Orientadores: <a href="https://www.linkedin.com/in/francisco-escobar/">Francisco de Souza Escobar</a>, <a href="https://www.linkedin.com/in/victorbarq/">Victor Bruno Alexander Rosetti de Quiroz</a>, <a href="https://www.linkedin.com/in/eduardo-savino-gomes-77833a10/">Eduardo Savino Gomes</a>, <a href="https://www.linkedin.com/in/ronaldo-araujo-pinto-3542811a/">Ronaldo Araujo Pinto</a>, <a href="https://www.linkedin.com/in/jbuesso/">José Carlos Buesso Jr</a>
 
-## Descrição
+---
+
+## 📝 Descrição
 
 <p align="center">
-<img src="https://pix4free.org/assets/library/2021-01-20/originals/game.jpg" alt="NOME DO JOGO" border="0">
-  Game by <a href="http://www.nyphotographic.com/">Nick Youngson</a> <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a> <a href="http://pix4free.org/">Pix4free</a>
+<img src="Imagens/banner.png" alt="DevMasters" width="1000">
 </p>
 
+Site responsivo para o **Instituto Alma** com foco em transparência e captação: páginas públicas (Início, Sobre, **Projetos** com detalhe, Como Ajudar, Contato), **Portal Alma** (login de doador/admin) e **painel administrativo** (CRUD de projetos com **upload de imagens**).  
 
-De um a dois parágrafos sobre o que é seu projeto e o que ele faz.
-<br><br>
-Meu projeto ajuda estudantes FECAP a configurarem seus githubs.
-<br><br>
-May the force be with you!
-<br><br>
+**Stack:**  
+- **Frontend:** React (Vite), React Router, Axios, CSS Grid/Flex  
+- **Backend:** Node.js (Express), MySQL, Multer (upload), Bcrypt (hash), JWT (auth), Helmet/CORS/Rate Limit  
+- **Banco:** MySQL (Azure)
 
 ## 🛠 Estrutura de pastas
 
