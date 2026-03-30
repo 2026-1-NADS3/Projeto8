@@ -19,88 +19,111 @@
 <img src="imagens/banner.png" alt="DevMasters" width="1000">
 </p>
 
-Site responsivo para o **Instituto Alma** com foco em transparência e captação: páginas públicas (Início, Sobre, **Projetos** com detalhe, Como Ajudar, Contato), **Portal Alma** (login de doador/admin) e **painel administrativo** (CRUD de projetos com **upload de imagens**).  
+Aplicação mobile desenvolvida como parte da **Entrega 1** do projeto acadêmico, em parceria com a empresa **RPG - Maya Yoshiko Yamamoto**.
 
-**Stack:**  
-- **Frontend:** React (Vite), React Router, Axios, CSS Grid/Flex  
-- **Backend:** Node.js (Express), MySQL, Multer (upload), Bcrypt (hash), JWT (auth), Helmet/CORS/Rate Limit  
-- **Banco:** MySQL (Azure)
+O objetivo do projeto é propor uma solução digital voltada à área de atuação da empresa, aplicando conceitos de **UX, desenvolvimento mobile, qualidade de software e computação em nuvem**, conforme as disciplinas do semestre.
 
-## 🛠 Estrutura de pastas
+---
 
--Raiz<br>
-|<br>
-|-->documentos<br>
-  &emsp;|-->antigos<br>
-  &emsp;|Documentação.docx<br>
-|-->executáveis<br>
-  &emsp;|-->windows<br>
-  &emsp;|-->android<br>
-  &emsp;|-->HTML<br>
-|-->imagens<br>
-|-->src<br>
-  &emsp;|-->Backend<br>
-  &emsp;|-->Frontend<br>
-|readme.md<br>
+## 🚀 Funcionalidades
 
-A pasta raiz contem dois arquivos que devem ser alterados:
+* Interface mobile responsiva
+* Navegação entre telas
+* Protótipo funcional da solução proposta
+* Aplicação dos conceitos de UX/UI
+* Estrutura preparada para evolução futura
 
-<b>README.MD</b>: Arquivo que serve como guia e explicação geral sobre seu projeto. O mesmo que você está lendo agora.
+---
 
-Há também 4 pastas que seguem da seguinte forma:
+## 🧰 Tecnologias Utilizadas
 
-<b>documentos</b>: Toda a documentação estará nesta pasta.
+* Android Studio
+* Linguagem utilizada no desenvolvimento mobile (Java/Kotlin)
+* XML para construção de layouts
+* Conceitos de UX/UI aplicados no design das telas
 
-<b>executáveis</b>: Binários e executáveis do projeto devem estar nesta pasta.
+---
 
-<b>imagens</b>: Imagens do sistema
+## 🛠 Estrutura de Pastas
 
-<b>src</b>: Pasta que contém o código fonte.
-
-## 🛠 Instalação
-
-<b>Android:</b>
-
-Faça o Download do JOGO.apk no seu celular.
-Execute o APK e siga as instruções de seu telefone.
-
-```sh
-Coloque código do prompt de comnando se for necessário
+```
+Raiz/
+│
+├── Documentos/
+│   └── Entrega 1/
+│       ├── Cloud Native/
+│       ├── Programação mobile/
+│       ├── Testes e Qualidade de Software (DevOps)/
+│       └── UX/
+│
+├── imagens/
+│   └── banner.png
+│
+├── src/
+│   └── Entrega 1/
+│       ├── Backend/
+│       └── Frontend/
+│
+├── .gitignore
+└── README.md
 ```
 
-<b>Windows:</b>
+---
 
-Não há instalação! Apenas executável!
-Encontre o JOGO.exe na pasta executáveis e execute-o como qualquer outro programa.
+## 📁 Descrição das Pastas
 
-```sh
-Coloque código do prompt de comnando se for necessário
-```
+* **Documentos**: Contém todas as entregas acadêmicas organizadas por disciplina
+* **imagens**: Recursos visuais do projeto (protótipos, banners, etc.)
+* **src**: Código-fonte do projeto
 
-<b>HTML:</b>
+---
 
-Não há instalação!
-Encontre o index.html na pasta executáveis e execute-o como uma página WEB (através de algum browser).
+## ⚙️ Instalação e Execução
+
+### 📱 Android
+
+1. Abra o projeto no **Android Studio**
+2. Aguarde o carregamento das dependências
+3. Execute o projeto em um:
+
+   * Emulador Android, ou
+   * Dispositivo físico conectado via USB
+
+---
 
 ## 💻 Configuração para Desenvolvimento
 
-Descreva como instalar todas as dependências para desenvolvimento e como rodar um test-suite automatizado de algum tipo. Se necessário, faça isso para múltiplas plataformas.
+### 🔧 Pré-requisitos
 
-Para abrir este projeto você necessita das seguintes ferramentas:
+* Android Studio instalado
+* SDK Android configurado
+* Emulador ou dispositivo físico
 
--<a href="https://godotengine.org/download">GODOT</a>
+---
 
-```sh
-make install
-npm test
-Coloque código do prompt de comnando se for necessário
-```
+## 🧪 Testes
 
-## 📋 Licença/License
-Utilize o link <https://chooser-beta.creativecommons.org/> para fazer uma licença CC BY 4.0.
+Os testes estão relacionados às validações realizadas durante o desenvolvimento, conforme documentado na disciplina de **Testes e Qualidade de Software (DevOps)**.
+
+---
+
+## 📋 Licença
+
+Este projeto pode utilizar a licença:
+
+Creative Commons - CC BY 4.0
+https://creativecommons.org/licenses/by/4.0/
+
+---
 
 ## 🎓 Referências
 
-Aqui estão as referências usadas no projeto.
+* Documentação oficial do Android Studio
+* Materiais das disciplinas:
 
+  * UX
+  * Programação Mobile
+  * Cloud Native
+  * Testes e Qualidade de Software
 
+---
