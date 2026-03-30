@@ -10,8 +10,7 @@
 
 ## Integrantes: <a href="http://www.linkedin.com/in/matheusfernandes2005">Matheus Fernandes Moraes</a>, <a href="https://www.linkedin.com/in/henri-seixas">Henri Seixas Souza</a>, <a href="#">Ana Luiza Ribeiro do Vale</a>, <a href="https://www.linkedin.com/in/pedro-henrique-ara%C3%BAjo-del-picolo-aa9444276">Pedro Henrique Araújo Del Picolo</a>
 
-## Professores Orientadores: <a href="https://www.linkedin.com/in/francisco-escobar/">Francisco de Souza Escobar</a>, <a href="https://www.linkedin.com/in/victorbarq/">Victor Bruno Alexander Rosetti de Quiroz</a>, <a href="https://www.linkedin.com/in/eduardo-savino-gomes-77833a10/">Eduardo Savino Gomes</a>, <a href="https://www.linkedin.com/in/ronaldo-araujo-pinto-3542811a/">Ronaldo Araujo Pinto</a>, <a href="https://www.linkedin.com/in/jbuesso/">José Carlos Buesso Jr</a>
-
+## Professores Orientadores: <a href="https://www.linkedin.com/in/francisco-escobar/">Francisco de Souza Escobar</a>, <a href="https://www.linkedin.com/in/rodrigo-da-rosa-phd/">Rodrigo da Rosa</a>, <a href="https://www.linkedin.com/in/aimarlopes/">Aimar Martins Lopes</a>, <a href="">Jefferson de Oliveira Silva</a>
 ---
 
 ## 📝 Descrição
