@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Cadastro de paciente (acessível apenas pelo admin).
+    Como o formulário tem muitos campos, usei LinearLayout vertical
+    dentro de ScrollView - é mais simples que ConstraintLayout pra
+    formulários longos.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bege"
+    tools:context=".CadastroUsuarioActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Cabeçalho -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/azulPetroleo"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <Button
+                android:id="@+id/botaoVoltar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:minWidth="40dp"
+                android:text="&lt;"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingEnd="40dp"
+                android:text="Cadastrar Paciente"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Foto + botão -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/imgFoto"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/avatar_placeholder"
+                android:contentDescription="Foto do paciente"
+                android:padding="40dp"
+                android:scaleType="centerCrop"
+                android:src="@android:drawable/ic_menu_camera" />
+
+            <Button
+                android:id="@+id/botaoSelecionarFoto"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/botao_secundario"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="Selecionar Foto"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- Formulário -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp">
+
+            <!-- Nome completo -->
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nome completo"
+                android:textColor="@color/marrom"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/campoNome"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="2dp"
+                android:autofillHints="name"
+                android:background="@drawable/campo_texto"
+                android:hint="Ex: João da Silva"
+                android:inputType="textPersonName"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/cinzaTexto" />
+
+            <!-- E-mail -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="E-mail"
+                android:textColor="@color/marrom"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/campoEmail"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="2dp"
+                android:autofillHints="emailAddress"
+                android:background="@drawable/campo_texto"
+                android:hint="email@exemplo.com"
+                android:inputType="textEmailAddress"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/cinzaTexto" />
+
+            <!-- Senha -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Senha (definida pelo admin)"
+                android:textColor="@color/marrom"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/campoSenha"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/campo_texto"
+                android:hint="Mínimo 6 caracteres"
+                android:inputType="textPassword"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/cinzaTexto" />
+
+            <!-- Data de nascimento -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Data de nascimento"
+                android:textColor="@color/marrom"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/campoDataNascimento"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/campo_texto"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="dd/mm/aaaa"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/cinzaTexto" />
+
+            <!-- Naturalidade -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Naturalidade"
+                android:textColor="@color/marrom"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/campoNaturalidade"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/campo_texto"
+                android:hint="Ex: São Paulo/SP"
+                android:inputType="textCapWords"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/cinzaTexto" />
+
+            <!-- Celular -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Celular"
+                android:textColor="@color/marrom"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/campoCelular"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="2dp"
+                android:autofillHints="phone"
+                android:background="@drawable/campo_texto"
+                android:hint="(11) 99999-9999"
+                android:inputType="phone"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/cinzaTexto" />
+
+            <!-- Endereço completo -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Endereço completo"
+                android:textColor="@color/marrom"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/campoEndereco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/campo_texto"
+                android:hint="Rua, número, bairro, cidade/UF"
+                android:inputType="textPostalAddress|textMultiLine"
+                android:minHeight="64dp"
+                android:padding="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/cinzaTexto" />
+
+            <!-- CPF -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="CPF"
+                android:textColor="@color/marrom"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/campoCpf"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/campo_texto"
+                android:hint="000.000.000-00"
+                android:inputType="number"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/cinzaTexto" />
+
+            <!-- Botão salvar -->
+            <Button
+                android:id="@+id/botaoSalvar"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/botao_arredondado"
+                android:text="Salvar Cadastro"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- básicas -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!--
+        Paleta da clínica em tom pastel.
+        Mantemos os mesmos nomes das cores antigas para
+        não quebrar quem já usa @color/azulPetroleo, etc.
+    -->
+    <color name="azulPetroleo">#5E8FA0</color>     <!-- azul principal mais suave -->
+    <color name="azulClaro">#A8D5DC</color>        <!-- turquesa pastel -->
+    <color name="coral">#E8A99A</color>            <!-- coral pastel -->
+    <color name="bege">#FFF8EE</color>             <!-- bege fundo -->
+    <color name="marrom">#A8866D</color>           <!-- marrom suave -->
+
+    <!-- auxiliares de texto e bordas -->
+    <color name="cinzaTexto">#6B5D4F</color>
+    <color name="cinzaClaro">#E5DDD0</color>
+</resources>
