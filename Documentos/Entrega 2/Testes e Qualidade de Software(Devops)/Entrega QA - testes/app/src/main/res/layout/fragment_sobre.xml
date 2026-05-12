@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Fragment "Sobre" — fica embutido na tela principal.
+    Tem dois cards:
+      1) Apresentação da Maya: foto dela + frase 1 (sou fisioterapeuta...)
+      2) Sobre o consultório: foto da sala + frase 2 (essência e equilíbrio)
+    No final, uma explicação rápida sobre RPG.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- ===== CARD 1: SOBRE A MAYA ===== -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_fundo"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/txtTituloMaya"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="A profissional"
+            android:textColor="@color/azulPetroleo"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imgMaya"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="12dp"
+            android:contentDescription="Foto da fisioterapeuta Maya Yamamoto"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtTituloMaya"
+            app:srcCompat="@drawable/maya" />
+
+        <TextView
+            android:id="@+id/txtFraseMaya"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/frase_maya"
+            android:textColor="@color/cinzaTexto"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/imgMaya"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imgMaya"
+            app:layout_constraintTop_toTopOf="@id/imgMaya" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- espaço entre os cards -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="12dp" />
+
+    <!-- ===== CARD 2: SOBRE A SALA ===== -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_fundo"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/txtTituloSala"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="O consultório"
+            android:textColor="@color/azulPetroleo"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imgSala"
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="12dp"
+            android:contentDescription="Foto do consultório da Clínica Maya Yamamoto RPG"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtTituloSala"
+            app:srcCompat="@drawable/sala" />
+
+        <TextView
+            android:id="@+id/txtFraseEssencia"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="@string/frase_essencia"
+            android:textColor="@color/marrom"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imgSala" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- espaço -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="12dp" />
+
+    <!-- ===== CARD 3: O QUE É RPG ===== -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_destaque"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="O que é RPG?"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/texto_sobre_rpg"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</LinearLayout>

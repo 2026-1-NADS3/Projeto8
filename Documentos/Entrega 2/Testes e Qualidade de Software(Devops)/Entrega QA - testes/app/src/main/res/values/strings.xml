@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Maya Yamamoto RPG</string>
+
+    <!-- Tela Principal -->
+    <string name="frase_maya">Sou fisioterapeuta formada pela USP em 1999.\nAcredito que as pessoas podem viver sem dores.\nO corpo “fala” quando sente dor, desconforto. Entender o que ele fala ajuda a tratar a causa, e eliminar a dor.</string>
+    <string name="frase_essencia">Descobrir o ponto de equilíbrio é chegar mais perto de sua essência.\n\nEssência e equilíbrio.</string>
+    <string name="texto_sobre_rpg">A Reeducação Postural Global (RPG) é um método de fisioterapia que trata a causa das dores por meio de alongamentos ativos e da conscientização da postura.</string>
+
+    <string name="botao_agendar">Agendar Consulta</string>
+    <string name="botao_exercicios">Exercícios para Postura</string>
+    <string name="botao_precos">Preços</string>
+    <string name="botao_contato">Contato</string>
+    <string name="botao_login">Login</string>
+
+    <!-- Tela de Exercícios -->
+    <string name="titulo_exercicios">Meu Plano de Exercícios</string>
+    <string name="subtitulo_exercicios">Exercícios prescritos pela sua fisioterapeuta</string>
+
+    <!-- Tela de Contato -->
+    <string name="titulo_contato">Entre em Contato</string>
+    <string name="endereco_clinica">Rua Rio Grande, 141 — sala 3 — Vila Mariana, São Paulo — SP, 04015-070</string>
+    <string name="telefone_clinica">(11) 99999-9999</string>
+    <string name="email_clinica">contato@mayayamamoto.com.br</string>
+
+    <!-- Tela de Login -->
+    <string name="titulo_login">Acesse sua conta</string>
+    <string name="dica_email">E-mail</string>
+    <string name="dica_senha">Senha</string>
+    <string name="esqueci_senha">Esqueci minha senha</string>
+    <string name="botao_entrar">Entrar</string>
+    <string name="sem_cadastro">Ainda não tem cadastro? Fale com a clínica.</string>
+
+    <!-- Telas Admin / Usuário -->
+    <string name="titulo_admin">Painel da Clínica</string>
+    <string name="titulo_usuario">Minha Área</string>
+    <string name="botao_sair">Sair</string>
+</resources>
