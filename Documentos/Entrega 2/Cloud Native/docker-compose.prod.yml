@@ -1,0 +1,65 @@
+# =============================================================================
+# docker-compose.prod.yml
+# Sobrescritas para PRODUÇÃO
+#
+# Uso:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Diferenças em relação ao ambiente de desenvolvimento:
+#   - Sem portas expostas do banco (acesso apenas interno)
+#   - Sem Adminer nem ferramentas de debug
+#   - Limites de recursos mais conservadores
+#   - Logging estruturado em JSON
+#   - Restart policy: always (reinicia mesmo após docker daemon restart)
+# =============================================================================
+
+version: "3.9"
+
+services:
+
+  api:
+    restart: always
+    # Em produção, a API é acessada via Nginx — não expõe porta diretamente
+    ports: !reset []
+
+    environment:
+      SPRING_PROFILES_ACTIVE:        "production"
+      SPRING_JPA_SHOW-SQL:           "false"
+      SPRING_JPA_HIBERNATE_DDL-AUTO: "validate"     # Nunca altera schema em prod
+      LOGGING_LEVEL_ROOT:            "WARN"
+      LOGGING_LEVEL_COM_EXAMPLE:     "INFO"
+      # Spring Boot structured logging (JSON para ingestão por ELK/Loki)
+      LOGGING_STRUCTURED_ENABLED:    "true"
+
+    deploy:
+      resources:
+        limits:
+          memory: "1g"
+          cpus:   "1.0"
+        reservations:
+          memory: "512m"
+      # Restart automático em caso de falha
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+  postgres:
+    restart: always
+    # Em produção, NUNCA exponha a porta do banco para o host
+    ports: !reset []
+
+    environment:
+      POSTGRES_SEED_DATA: "false"     # Sem seed em produção
+
+    deploy:
+      resources:
+        limits:
+          memory: "1g"
+          cpus:   "0.5"
+
+  nginx:
+    restart: always
+    # Nginx em produção não tem profile — sempre sobe
+    profiles: !reset []

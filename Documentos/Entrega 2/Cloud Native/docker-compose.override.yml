@@ -1,0 +1,54 @@
+# =============================================================================
+# docker-compose.override.yml
+# Sobrescritas automáticas para DESENVOLVIMENTO LOCAL
+#
+# Este arquivo é carregado automaticamente pelo Docker Compose junto com
+# o docker-compose.yml principal (comportamento padrão do Compose).
+# Em produção ou CI/CD, ignore-o com:
+#   docker compose -f docker-compose.yml up -d
+#
+# Propósito: adicionar conveniências de desenvolvimento sem poluir o
+# docker-compose.yml principal (que deve funcionar em todos os ambientes).
+# =============================================================================
+
+version: "3.9"
+
+services:
+
+  # ── API: modo desenvolvimento ─────────────────────────────────────────────
+  api:
+    environment:
+      # Spring DevTools: recarrega classes sem reiniciar o container
+      SPRING_DEVTOOLS_RESTART_ENABLED: "true"
+      SPRING_JPA_SHOW-SQL:             "true"       # Exibe SQL no log
+      SPRING_JPA_HIBERNATE_DDL-AUTO:   "update"     # Cria/atualiza tabelas
+      LOGGING_LEVEL_ROOT:              "INFO"
+      LOGGING_LEVEL_COM_EXAMPLE:       "DEBUG"       # Debug da aplicação
+      LOGGING_LEVEL_ORG_HIBERNATE_SQL: "DEBUG"       # Debug do Hibernate
+
+    # Hot reload: mapeia o código compilado do host para o container
+    # Funciona com Spring Boot DevTools para recarregamento automático
+    volumes:
+      - api-logs:/app/logs
+      - ./config:/app/config:ro
+      # Descomente para hot reload de classes (requer compilação contínua no host):
+      # - ./api/build/classes:/app/BOOT-INF/classes:ro
+
+    # Em dev, não limita recursos para não travar a máquina do dev
+    deploy:
+      resources:
+        limits:
+          memory: "2g"
+          cpus:   "2.0"
+
+  # ── PostgreSQL: seed automático em desenvolvimento ─────────────────────────
+  postgres:
+    environment:
+      POSTGRES_SEED_DATA:     "true"    # Insere dados de exemplo no init
+      SPRING_PROFILES_ACTIVE: "development"
+
+    # Bind mount extra: facilita inspeção dos dados em desenvolvimento
+    # NUNCA use bind mounts para dados em produção
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d/extra:ro   # Scripts extras de init

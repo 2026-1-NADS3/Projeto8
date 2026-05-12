@@ -1,0 +1,299 @@
+# =============================================================================
+# docker-compose.yml
+# Orquestração Cloud Native: API REST + PostgreSQL + Nginx
+#
+# COMO USAR:
+#   1. Copie .env.example para .env e preencha as variáveis
+#   2. docker compose up -d               (sobe API + banco)
+#   3. docker compose --profile proxy up -d  (+ Nginx como reverse proxy)
+#   4. docker compose --profile tools up -d  (+ Adminer para gestão do banco)
+#
+# AMBIENTES:
+#   desenvolvimento: docker compose --profile tools up -d
+#   staging:         docker compose --profile proxy up -d
+#   produção:        docker compose --profile proxy up -d  (com .env de prod)
+#
+# Versão do Compose file spec: 3.9 (requer Docker Engine >= 20.10)
+# =============================================================================
+
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# NETWORKS
+# Rede bridge isolada para comunicação entre containers.
+# Containers na mesma rede se resolvem pelo nome do serviço (DNS interno).
+# Ex.: a API acessa o banco via hostname "postgres", não "localhost".
+# ─────────────────────────────────────────────────────────────────────────────
+networks:
+  backend-net:
+    driver: bridge
+    name: backend-net                 # Nome fixo (facilita debug com docker network)
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24      # Sub-rede dedicada — evita conflito com host
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VOLUMES
+# Volumes nomeados persistem dados além do ciclo de vida dos containers.
+# Diferente de bind mounts (./pasta:/container), volumes são gerenciados
+# pelo Docker e sobrevivem a "docker compose down" sem a flag -v.
+# ─────────────────────────────────────────────────────────────────────────────
+volumes:
+  postgres-data:
+    driver: local
+    name: backend-postgres-data      # Nome explícito — evita prefixo automático
+
+  api-logs:
+    driver: local
+    name: backend-api-logs
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ANCHORS YAML — evitam repetição de configuração
+# Referenciados com <<: *nome nos serviços
+# ─────────────────────────────────────────────────────────────────────────────
+x-db-credentials: &db-credentials
+  SPRING_DATASOURCE_URL:      jdbc:postgresql://postgres:5432/${DB_NAME:-appdb}
+  SPRING_DATASOURCE_USERNAME: ${DB_USER:-appuser}
+  SPRING_DATASOURCE_PASSWORD: ${DB_PASS:?Erro: DB_PASS não definido no .env}
+
+x-java-config: &java-config
+  JAVA_OPTS:               "${JAVA_OPTS:--Xms256m -Xmx512m -XX:+UseG1GC}"
+  SPRING_PROFILES_ACTIVE:  "${SPRING_PROFILE:-development}"
+  TZ:                      "${TZ:-America/Sao_Paulo}"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SERVICES
+# ─────────────────────────────────────────────────────────────────────────────
+services:
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SERVIÇO 1: API REST (Spring Boot)
+  # ═══════════════════════════════════════════════════════════════════════════
+  api:
+    # Build a partir do Dockerfile local; usa cache de layers sempre que possível
+    build:
+      context: ./api                  # Diretório com o Dockerfile da API
+      dockerfile: Dockerfile
+      args:
+        # ARGs passados ao Dockerfile em tempo de build
+        APP_VERSION:  "${APP_VERSION:-1.0.0}"
+        BUILD_DATE:   "${BUILD_DATE:-}"
+        GIT_COMMIT:   "${GIT_COMMIT:-}"
+
+    # Tag da imagem gerada — permite push para registry depois
+    image: "${REGISTRY:-}backend-api:${APP_VERSION:-latest}"
+    container_name: backend-api
+
+    # Reinicia automaticamente a menos que seja parado manualmente
+    # Opções: no | always | on-failure | unless-stopped
+    restart: unless-stopped
+
+    # Mapeamento de porta: HOST:CONTAINER
+    # Remove a linha abaixo em produção (acesse apenas via Nginx)
+    ports:
+      - "${API_PORT:-8080}:8080"
+
+    # Variáveis de ambiente injetadas no container em runtime
+    environment:
+      # Credenciais do banco (via anchors YAML)
+      <<: [*db-credentials, *java-config]
+
+      # Configurações da aplicação
+      SERVER_PORT:                    "8080"
+      APP_NAME:                       "${APP_NAME:-backend-api}"
+      APP_VERSION:                    "${APP_VERSION:-1.0.0}"
+      APP_LOG_DIR:                    "/app/logs"
+
+      # Datasource adicional (pool de conexões HikariCP)
+      SPRING_DATASOURCE_HIKARI_MAXIMUM-POOL-SIZE:  "${DB_POOL_SIZE:-10}"
+      SPRING_DATASOURCE_HIKARI_MINIMUM-IDLE:       "2"
+      SPRING_DATASOURCE_HIKARI_CONNECTION-TIMEOUT: "30000"
+
+      # JPA / Hibernate
+      SPRING_JPA_HIBERNATE_DDL-AUTO:  "${DDL_AUTO:-validate}"
+      SPRING_JPA_SHOW-SQL:            "${SHOW_SQL:-false}"
+
+      # Actuator (endpoints de monitoramento Spring Boot)
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,info,metrics,prometheus"
+      MANAGEMENT_ENDPOINT_HEALTH_SHOW-DETAILS:   "always"
+
+    # Volumes: persiste logs gerados pela aplicação
+    volumes:
+      - api-logs:/app/logs                          # Logs persistentes
+      - ./config:/app/config:ro                     # Config files (somente leitura)
+
+    # Dependências com verificação de saúde real (não só "started")
+    depends_on:
+      postgres:
+        condition: service_healthy      # Aguarda postgres responder ao healthcheck
+
+    # Rede interna
+    networks:
+      - backend-net
+
+    # Healthcheck: Docker verifica periodicamente se a API está saudável.
+    # Se falhar 3 vezes seguidas, o container é marcado como "unhealthy"
+    # e pode ser reiniciado pelo restart policy.
+    healthcheck:
+      test:
+        - "CMD"
+        - "curl"
+        - "-f"
+        - "-s"
+        - "http://localhost:8080/actuator/health"
+      interval:     30s       # Intervalo entre verificações
+      timeout:      10s       # Timeout de cada verificação
+      retries:      3         # Tentativas antes de marcar unhealthy
+      start_period: 90s       # Período de graça após inicialização (evita falsos negativos)
+
+    # Labels: metadados para ferramentas de observabilidade (Prometheus, Portainer)
+    labels:
+      com.backend.service:     "api"
+      com.backend.version:     "${APP_VERSION:-latest}"
+      com.backend.environment: "${SPRING_PROFILE:-development}"
+
+    # Limites de recursos: evita que a API consuma toda a RAM/CPU do host
+    deploy:
+      resources:
+        limits:
+          memory: "${API_MEMORY_LIMIT:-1g}"
+          cpus:   "${API_CPU_LIMIT:-1.0}"
+        reservations:
+          memory: "256m"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SERVIÇO 2: PostgreSQL
+  # ═══════════════════════════════════════════════════════════════════════════
+  postgres:
+    # Usa nosso Dockerfile customizado (com postgresql.conf e scripts de init)
+    build:
+      context: ./postgres             # Diretório com o Dockerfile do Postgres
+      dockerfile: Dockerfile
+      args:
+        TZ: "${TZ:-America/Sao_Paulo}"
+
+    image: "${REGISTRY:-}backend-postgres:${APP_VERSION:-latest}"
+    container_name: backend-postgres
+    restart: unless-stopped
+
+    # Porta: exposta ao host APENAS em desenvolvimento.
+    # Em produção, remova esta seção — o banco só deve ser acessível
+    # internamente via rede Docker (hostname "postgres").
+    ports:
+      - "${POSTGRES_HOST_PORT:-5432}:5432"
+
+    environment:
+      # Variáveis reconhecidas pela imagem oficial do PostgreSQL
+      POSTGRES_DB:       "${DB_NAME:-appdb}"
+      POSTGRES_USER:     "${DB_USER:-appuser}"
+      POSTGRES_PASSWORD: "${DB_PASS:?Erro: DB_PASS não definido no .env}"
+
+      # Diretório dos dados (separado do diretório padrão para evitar
+      # problemas de permissão com volumes em alguns ambientes)
+      PGDATA:            "/var/lib/postgresql/data/pgdata"
+
+      # Controla se o script 02_seed.sh deve inserir dados de exemplo
+      POSTGRES_SEED_DATA:      "${POSTGRES_SEED_DATA:-false}"
+      SPRING_PROFILES_ACTIVE:  "${SPRING_PROFILE:-development}"
+
+      TZ: "${TZ:-America/Sao_Paulo}"
+
+    # Volume nomeado: persiste os dados do banco entre restarts e deploys.
+    # ATENÇÃO: "docker compose down -v" APAGA este volume (e todos os dados)!
+    volumes:
+      - postgres-data:/var/lib/postgresql/data  # Dados persistentes
+
+    networks:
+      - backend-net
+
+    # Healthcheck: verifica se o PostgreSQL está aceitando conexões.
+    # pg_isready retorna 0 quando o servidor está pronto para receber queries.
+    healthcheck:
+      test:
+        - "CMD-SHELL"
+        - "pg_isready -U ${DB_USER:-appuser} -d ${DB_NAME:-appdb} -h localhost"
+      interval:     10s
+      timeout:      5s
+      retries:      5
+      start_period: 30s
+
+    labels:
+      com.backend.service: "postgres"
+
+    deploy:
+      resources:
+        limits:
+          memory: "${POSTGRES_MEMORY_LIMIT:-512m}"
+          cpus:   "0.5"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SERVIÇO 3: Nginx — Reverse Proxy
+  # Profile "proxy": ativo apenas quando explicitamente solicitado
+  #   docker compose --profile proxy up -d
+  # ═══════════════════════════════════════════════════════════════════════════
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: backend-nginx
+    restart: unless-stopped
+    profiles:
+      - proxy               # Não sobe por padrão — apenas com --profile proxy
+
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+
+    environment:
+      TZ: "${TZ:-America/Sao_Paulo}"
+      NGINX_ENVSUBST_TEMPLATE_SUFFIX: ".conf"
+
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro       # Config principal
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro               # Virtual hosts
+      - ./nginx/ssl:/etc/nginx/ssl:ro                     # Certificados SSL
+      - api-logs:/var/log/nginx                           # Logs compartilhados
+
+    depends_on:
+      api:
+        condition: service_healthy
+
+    networks:
+      - backend-net
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/nginx-health"]
+      interval: 30s
+      timeout:  5s
+      retries:  3
+
+    labels:
+      com.backend.service: "nginx"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SERVIÇO 4: Adminer — Gerenciador visual do banco (desenvolvimento)
+  # Profile "tools": apenas em desenvolvimento
+  #   docker compose --profile tools up -d
+  # ═══════════════════════════════════════════════════════════════════════════
+  adminer:
+    image: adminer:4-standalone
+    container_name: backend-adminer
+    restart: unless-stopped
+    profiles:
+      - tools               # Apenas com --profile tools
+
+    ports:
+      - "${ADMINER_PORT:-8888}:8080"
+
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres   # Pré-seleciona o servidor no login
+      ADMINER_DESIGN:         pepa       # Tema da interface
+
+    depends_on:
+      - postgres
+
+    networks:
+      - backend-net
+
+    labels:
+      com.backend.service: "adminer"
+      com.backend.env:     "development-only"

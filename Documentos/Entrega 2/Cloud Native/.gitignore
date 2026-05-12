@@ -1,0 +1,40 @@
+# Credenciais e configurações sensíveis — NUNCA versionar
+.env
+*.env.local
+*.env.production
+*.env.staging
+*.env.*.local
+
+# Certificados SSL
+nginx/ssl/*.key
+nginx/ssl/*.crt
+nginx/ssl/*.pem
+
+# Dados do banco (se usar bind mount local)
+data/
+
+# Logs
+logs/
+*.log
+
+# Build artifacts Java/Gradle
+api/build/
+api/.gradle/
+*.jar
+*.class
+
+# Dump de heap JVM
+*.hprof
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# macOS
+.DS_Store
+
+# Backups
+*.bak
+*.backup
